@@ -1,5 +1,4 @@
 /** @odoo-module **/
-
 /* Copyright 2024 Tecnativa - Carlos Roca
  * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
 
@@ -11,7 +10,7 @@ import {formatBinarySize} from "../../utils/format_binary_size.esm";
 import {mimetype2fa} from "../../utils/mimetype.esm";
 import {patch} from "@web/core/utils/patch";
 import {session} from "@web/session";
-import {useModel} from "@web/views/model";
+import {useModelWithSampleData} from "@web/model/model";
 import {useService} from "@web/core/utils/hooks";
 
 export function getDMSListControllerObject() {
@@ -24,7 +23,7 @@ export function getDMSListControllerObject() {
             this.duplicateId = false;
             this.model =
                 (this.props.record && this.props.record.model) ||
-                useModel(this.props.Model, this.modelParams());
+                useModelWithSampleData(this.props.Model, this.modelParams());
             this.resModel = this.props.resModel || this.props.record.resModel;
             this.rendererActions = {
                 onDMSCreateEmptyStorages: this.onDMSCreateEmptyStorages.bind(this),
@@ -39,6 +38,7 @@ export function getDMSListControllerObject() {
             });
         },
         modelParams() {
+            // Adaptación Odoo 17: No usamos extractFieldsFromArchInfo
             const modelConfig = this.props.state?.modelState?.config || {
                 resModel: this.props.resModel,
                 fields: this.props.fields,
@@ -526,6 +526,6 @@ export function getDMSListControllerObject() {
 }
 
 export class DmsListController extends Component {}
-patch(DmsListController.prototype, getDMSListControllerObject());
+patch(DmsListController.prototype, "dms_field.DmsListController", getDMSListControllerObject());
 DmsListController.template = "dms_field.View";
 DmsListController.components = {Layout};

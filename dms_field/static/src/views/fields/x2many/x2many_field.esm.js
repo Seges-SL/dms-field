@@ -7,8 +7,8 @@ import {X2ManyField} from "@web/views/fields/x2many/x2many_field";
 import {getDMSListControllerObject} from "../../dms_list/dms_list_controller.esm";
 import {patch} from "@web/core/utils/patch";
 
-patch(X2ManyField.prototype, getDMSListControllerObject());
-patch(X2ManyField.prototype, {
+patch(X2ManyField.prototype, "dms_field.X2ManyFieldController", getDMSListControllerObject());
+patch(X2ManyField.prototype, "dms_field.X2ManyFieldProps", {
     get rendererProps() {
         const props = {
             archInfo: this.archInfo,

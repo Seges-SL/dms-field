@@ -17,15 +17,12 @@ class IrUiView(models.Model):
         return res
 
     def _postprocess_tag_dms_list(self, node, name_manager, node_info):
-        # 1. CRÍTICO: Actualizar el node_info original para que el framework sepa el tipo de vista
-        node_info['view_type'] = node.tag
-
         parent = node.getparent()
         parent_name = parent.get("name") if parent is not None else None
         
         new_name_manager = name_manager
         
-        # 2. Si la vista está dentro de un campo (x2many), adaptamos el modelo
+        # 1. Si la vista está dentro de un campo relacional (x2many), adaptamos el modelo
         if parent_name:
             field = name_manager.model._fields.get(parent_name)
             if field:
@@ -34,6 +31,20 @@ class IrUiView(models.Model):
                     model = self.env[model_name]
                     new_name_manager = NameManager(model, parent=name_manager)
 
-        # 3. Procesar los campos hijos usando el node_info actualizado
+        # 2. CRÍTICO: Creamos información NUEVA aislada para esta vista 
+        # sin sobreescribir ni romper la vista padre (node_info)
+        root_info = {
+            "view_type": node.tag,
+            "view_editable": self._editable_node(node, name_manager),
+            "name_manager": name_manager,
+        }
+        
+        new_node_info = dict(
+            root_info,
+            modifiers={},
+            editable=self._editable_node(node, new_name_manager),
+        )
+        
+        # 3. Procesamos los campos hijos usando el diccionario aislado
         for child in node:
-            self._postprocess_tag_field(child, new_name_manager, node_info)
+            self._postprocess_tag_field(child, new_name_manager, new_node_info)

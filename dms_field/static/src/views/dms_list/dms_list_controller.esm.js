@@ -11,7 +11,7 @@ import {formatBinarySize} from "../../utils/format_binary_size.esm";
 import {mimetype2fa} from "../../utils/mimetype.esm";
 import {patch} from "@web/core/utils/patch";
 import {session} from "@web/session";
-import {useModel} from "@web/model/model";
+import {useModel} from "@web/views/model";
 import {useService} from "@web/core/utils/hooks";
 
 export function getDMSListControllerObject() {

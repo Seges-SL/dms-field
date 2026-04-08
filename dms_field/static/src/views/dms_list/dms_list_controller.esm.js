@@ -5,12 +5,11 @@ import {Component, onRendered} from "@odoo/owl";
 import {Deferred} from "@web/core/utils/concurrency";
 import {Domain} from "@web/core/domain";
 import {Layout} from "@web/search/layout";
-import {extractFieldsFromArchInfo} from "@web/model/relational_model/utils";
 import {formatBinarySize} from "../../utils/format_binary_size.esm";
 import {mimetype2fa} from "../../utils/mimetype.esm";
 import {patch} from "@web/core/utils/patch";
 import {session} from "@web/session";
-import {useModelWithSampleData} from "@web/model/model";
+import {useModel} from "@web/model/model";
 import {useService} from "@web/core/utils/hooks";
 
 export function getDMSListControllerObject() {
@@ -23,7 +22,7 @@ export function getDMSListControllerObject() {
             this.duplicateId = false;
             this.model =
                 (this.props.record && this.props.record.model) ||
-                useModelWithSampleData(this.props.Model, this.modelParams());
+                useModel(this.props.Model, this.modelParams());
             this.resModel = this.props.resModel || this.props.record.resModel;
             this.rendererActions = {
                 onDMSCreateEmptyStorages: this.onDMSCreateEmptyStorages.bind(this),
@@ -38,14 +37,10 @@ export function getDMSListControllerObject() {
             });
         },
         modelParams() {
-            const {activeFields, fields} = extractFieldsFromArchInfo(
-                this.props.archInfo,
-                this.props.fields
-            );
             const modelConfig = this.props.state?.modelState?.config || {
                 resModel: this.props.resModel,
-                fields,
-                activeFields,
+                fields: this.props.fields,
+                activeFields: this.props.archInfo.activeFields,
             };
             return {
                 config: modelConfig,

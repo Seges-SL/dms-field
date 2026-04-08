@@ -526,6 +526,6 @@ export function getDMSListControllerObject() {
 }
 
 export class DmsListController extends Component {}
-patch(DmsListController.prototype, "dms_field.DmsListController", getDMSListControllerObject());
+patch(DmsListController.prototype, getDMSListControllerObject());
 DmsListController.template = "dms_field.View";
 DmsListController.components = {Layout};

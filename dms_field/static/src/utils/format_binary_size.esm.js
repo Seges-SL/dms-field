@@ -1,3 +1,4 @@
+/** @odoo-module **/
 import {formatFloat} from "@web/views/fields/formatters";
 
 export function formatBinarySize(value) {

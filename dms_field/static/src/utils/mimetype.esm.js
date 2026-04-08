@@ -1,3 +1,4 @@
+/** @odoo-module **/
 var mapping = [
     ["file-image-o", /^image\//],
     ["file-audio-o", /^audio\//],

@@ -7,9 +7,16 @@ import {DmsListController} from "./dms_list_controller.esm";
 import {DmsListRenderer} from "./dms_list_renderer.esm";
 import {RelationalModel} from "@web/model/relational_model/relational_model";
 import {registry} from "@web/core/registry";
+import {_t} from "@web/core/l10n/translation";
 
 export const dmsListView = {
     type: "dms_list",
+    
+    // --- PROPIEDADES OBLIGATORIAS PARA ODOO 17 ---
+    display_name: _t("DMS"),
+    icon: "fa fa-folder-open-o",
+    multiRecord: true,
+    // ---------------------------------------------
 
     Controller: DmsListController,
     ArchParser: DmsListArchParser,

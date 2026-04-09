@@ -63,10 +63,13 @@ export function getDMSListControllerObject() {
             var directory_domain = [];
             var autocompute_directory = false;
             var show_storage = true;
+            
             if (model === "dms.storage") {
                 if (this.model.root.resId) {
+                    // Formulario guardado
                     storage_domain = [["id", "=", this.model.root.resId]];
-                } else {
+                } else if (this.model.root.records) {
+                    // Vista lista con registros
                     storage_domain = [
                         [
                             "id",
@@ -76,28 +79,37 @@ export function getDMSListControllerObject() {
                             }),
                         ],
                     ];
+                } else {
+                    // Formulario nuevo (sin guardar)
+                    storage_domain = [["id", "=", 0]];
                 }
                 directory_domain = [];
+                
             } else if (model === "dms.field.template") {
-                if (this.model.root.resId) {
+                if (this.model.root.resId && this.model.root.data.storage_id) {
                     storage_domain = [["id", "=", this.model.root.data.storage_id[0]]];
                 } else {
                     storage_domain = [["id", "=", 0]];
                 }
+                
+                // Extraemos los registros de forma segura evitando el undefined
+                const dir_records = this.model.root.data.dms_directory_ids?.records || [];
                 directory_domain = [
                     [
                         "root_directory_id",
                         "in",
-                        this.model.root.data.dms_directory_ids.records.map((record) => {
+                        dir_records.map((record) => {
                             return record.resId;
                         }),
                     ],
                 ];
+                
             } else {
                 storage_domain = [["field_template_ids.model", "=", model]];
                 autocompute_directory = true;
                 show_storage = false;
             }
+            
             this.params = {
                 storage: {
                     domain: storage_domain,

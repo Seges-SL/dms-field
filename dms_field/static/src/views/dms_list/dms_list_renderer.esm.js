@@ -551,3 +551,4 @@ export class DmsListRenderer extends Component {
 }
 
 DmsListRenderer.template = "dms_list.Renderer";
+DmsListRenderer.props = ["*"];

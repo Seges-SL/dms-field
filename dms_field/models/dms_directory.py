@@ -119,7 +119,8 @@ class DmsDirectory(models.Model):
         if not domain:
             domain = []
         self._check_parent_field()
-        self.check_access("read")
+        self.check_access_rights("read")
+        self.check_access_rule("read")
         if expression.is_false(self, domain):
             return []
         query = self._where_calc(domain)

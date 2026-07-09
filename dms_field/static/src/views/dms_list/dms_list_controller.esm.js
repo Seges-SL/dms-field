@@ -452,10 +452,19 @@ export function getDMSListControllerObject() {
         buildDMSDomain(base, domain, autocompute_directory) {
             var result = new Domain(base);
             if (autocompute_directory) {
-                result = Domain.and([
-                    result,
-                    new Domain([["res_id", "=", this.model.root.resId]]),
-                ]);
+                // PATCH: Verificamos si resId existe antes de usarlo
+                const resId = this.model.root.resId;
+                if (resId) {
+                    result = Domain.and([
+                        result,
+                        new Domain([["res_id", "=", resId]]),
+                    ]);
+                } else {
+                    // Si no hay resId, forzamos un dominio que no devuelva nada o un dominio vacío seguro
+                    // para evitar el error de sintaxis en el dominio.
+                    // ["id", "=", 0] es una forma segura de no traer nada.
+                    result = Domain.and([result, new Domain([["id", "=", 0]])]);
+                }
             } else {
                 result = Domain.and([result, new Domain(domain || [])]);
             }
